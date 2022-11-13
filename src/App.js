@@ -102,6 +102,7 @@ const App = () => {
           type='text'
           placeholder='הכנס מספר טלפון'
           required
+          autoFocus
           maxLength='10'
           onChange={handleChange}
           onKeyDown={handleKeyDown}

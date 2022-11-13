@@ -1,5 +1,5 @@
 {
-  "name": "whatsapp-message-sender",
+  "name": "whatsapp-messages-sender",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
