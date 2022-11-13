@@ -19,10 +19,10 @@ appId: '1:******:web:*******',
 measurementId: 'G-*******',
 };`
 
-### then run:
+then run:
 ### `npm install`
 
-### and finally run:
+and finally run:
 ### `npm start`
 
 Runs the app in the development mode.\
