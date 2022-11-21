@@ -5,6 +5,24 @@ import {getAnalytics, logEvent} from 'firebase/analytics';
 import Button from '@mui/material/Button';
 
 import {firebaseConfig} from './properties';
+import LanguageButton from './LanguageButton';
+
+const texts = {
+  HE: {
+    h2: 'שליחת הודעות וואטסאפ בקלות',
+    h3: 'ללא הוספה לאנשי הקשר',
+    alert: 'הכנס מספר טלפו תקין',
+    placeholder: 'הקלד/הדבק מספר טלפון',
+    button: 'שליחת הודעה',
+  },
+  EN: {
+    h2: 'Send Whatsapp messages easily',
+    h3: 'Without adding contacts',
+    alert: 'Enter A Valid Phone Number',
+    placeholder: 'Enter Phone Number',
+    button: 'Send Message',
+  },
+};
 
 import './index.css';
 
@@ -59,14 +77,22 @@ logEvent(analytics, 'main_page_loaded');
 
 
 const validatePhoneNumber = (number) => {
-  return number &&
-      number !== '' &&
-      (number.length === 9 && number.charAt(0) !== '0' ||
-          number.length === 10 && number.charAt(0) === '0');
+  console.log(number);
+  console.log(number.charAt(0) === '+');
+  console.log(number.length);
+  console.log(number.length === 9 && number.charAt(0) !== '0');
+  console.log(number.length === 10 && number.charAt(0) === '0');
+  console.log(number.length > 13 && number.charAt(0) === '+');
+
+  return number && number !== '' &&
+      (number.length === 9 && number.charAt(0) !== '0' || // e.g 547111111
+          number.length === 10 && number.charAt(0) === '0' || // e.g 0547111111
+        number.length >= 12 && number.charAt(0) === '+'); // e.g +972547111111
 };
 
 const App = () => {
   const [input, setInput] = useState('');
+  const [language, setLanguage] = useState('HE');
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -75,15 +101,24 @@ const App = () => {
   };
 
   const handleSubmit = () => {
-    if (!validatePhoneNumber(input)) {
+    let cleanNumString = input;
+    if (input && input !== '') {
+      cleanNumString = input.replaceAll(/-/g, '')
+          .replaceAll(/\(/g, '')
+          .replaceAll(/' '/g, '')
+          .replaceAll(/\)/g, '');
+    }
+    if (!validatePhoneNumber(cleanNumString)) {
       logEvent(analytics, 'invalid_number');
-      alert('הכנס מספר טלפו תקין');
+      alert(texts[language].alert);
       return;
     }
-    const number = `+${country}${+input}`;
+    const number = cleanNumString.charAt(0) === '+' ? cleanNumString :
+      `+${country}${+cleanNumString}`;
     const url = `${apiUrl}${number}`;
+    console.log(url);
     logEvent(analytics, 'submit_button');
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url);
   };
 
   const handleChange = (num) => {
@@ -93,24 +128,27 @@ const App = () => {
   return (
     <Wrapper>
       <div>
+        <LanguageButton language={language} setLanguage={setLanguage}/>
         <Logo src={'https://img.icons8.com/color/512/whatsapp.png'} alt="Logo" />
-        <h2>שליחת הודעות וואטסאפ בקלות</h2>
-        <h3>ללא הוספה לאנשי הקשר</h3>
+        <h2>{texts[language].h2}</h2>
+        <h3>{texts[language].h3}</h3>
       </div>
       <InputWrapper>
         <StyledInput
-          type='text'
-          placeholder='הכנס מספר טלפון'
+          type='tel'
+          pattern="[0-9]*"
+          inputmode="tel"
+          placeholder={texts[language].placeholder}
           required
           autoFocus
-          maxLength='10'
+          maxLength='15'
           onChange={handleChange}
           onKeyDown={handleKeyDown}
         />
       </InputWrapper>
       <ButtonWrapper>
         <Button variant='contained' color='success' onClick={handleSubmit}>
-          <b>שליחת הודעה</b>
+          <b>{texts[language].button}</b>
         </Button>
       </ButtonWrapper>
     </Wrapper>
