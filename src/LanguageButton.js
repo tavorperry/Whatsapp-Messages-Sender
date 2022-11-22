@@ -8,13 +8,13 @@ import ToggleButton from '@mui/material/ToggleButton';
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  gap: 5px;
 `;
 
 
-const LanguageButton = ({language, setLanguage}) => {
+const LanguageButton = ({language, changeLanguage}) => {
   const handleChange = (_event, newVal) => {
-    setLanguage(newVal);
+    if (newVal === language || !newVal) return; // Do Nothing
+    changeLanguage(newVal);
   };
 
   return (
@@ -37,7 +37,7 @@ const LanguageButton = ({language, setLanguage}) => {
 
 LanguageButton.propTypes = {
   language: PropTypes.string,
-  setLanguage: PropTypes.func,
+  changeLanguage: PropTypes.func,
 };
 
 export default LanguageButton;

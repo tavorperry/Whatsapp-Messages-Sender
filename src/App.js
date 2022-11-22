@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import {initializeApp} from 'firebase/app';
+
 import {getAnalytics, logEvent} from 'firebase/analytics';
+import {initializeApp} from 'firebase/app';
 import Button from '@mui/material/Button';
+import {useCookies} from 'react-cookie';
 
 import {firebaseConfig} from './properties';
 import LanguageButton from './LanguageButton';
@@ -77,13 +79,6 @@ logEvent(analytics, 'main_page_loaded');
 
 
 const validatePhoneNumber = (number) => {
-  console.log(number);
-  console.log(number.charAt(0) === '+');
-  console.log(number.length);
-  console.log(number.length === 9 && number.charAt(0) !== '0');
-  console.log(number.length === 10 && number.charAt(0) === '0');
-  console.log(number.length > 13 && number.charAt(0) === '+');
-
   return number && number !== '' &&
       (number.length === 9 && number.charAt(0) !== '0' || // e.g 547111111
           number.length === 10 && number.charAt(0) === '0' || // e.g 0547111111
@@ -91,8 +86,15 @@ const validatePhoneNumber = (number) => {
 };
 
 const App = () => {
+  const [cookies, setCookie] = useCookies(['wpsender']);
   const [input, setInput] = useState('');
-  const [language, setLanguage] = useState('HE');
+  const langFromCookie = cookies.Language;
+  const [language, setLanguage] = useState(langFromCookie ?? 'HE');
+
+  const handleChangeLanguage = (language) => {
+    setLanguage(language);
+    setCookie('Language', language, {path: '/'});
+  };
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -128,7 +130,8 @@ const App = () => {
   return (
     <Wrapper>
       <div>
-        <LanguageButton language={language} setLanguage={setLanguage}/>
+        {/* eslint-disable-next-line max-len */}
+        <LanguageButton language={language} changeLanguage={handleChangeLanguage}/>
         <Logo src={'https://img.icons8.com/color/512/whatsapp.png'} alt="Logo" />
         <h2>{texts[language].h2}</h2>
         <h3>{texts[language].h3}</h3>
