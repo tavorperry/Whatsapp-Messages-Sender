@@ -132,7 +132,7 @@ const App = () => {
       <div>
         {/* eslint-disable-next-line max-len */}
         <LanguageButton language={language} changeLanguage={handleChangeLanguage}/>
-        <Logo src={'https://img.icons8.com/color/512/whatsapp.png'} alt="Logo" />
+        <Logo src='../whatsapp_logo.png' alt="Whatsapp Logo" />
         <h2>{texts[language].h2}</h2>
         <h3>{texts[language].h3}</h3>
       </div>
