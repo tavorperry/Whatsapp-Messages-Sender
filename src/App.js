@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 import {getAnalytics, logEvent} from 'firebase/analytics';
@@ -8,6 +8,8 @@ import {useCookies} from 'react-cookie';
 
 import {firebaseConfig} from './properties';
 import LanguageButton from './LanguageButton';
+
+import './index.css';
 
 const texts = {
   HE: {
@@ -26,15 +28,12 @@ const texts = {
   },
 };
 
-import './index.css';
-
 const Wrapper = styled.div`
     height: 1000px;
     width: 100%;
     text-align: center;
     margin: 25px auto;
 `;
-
 const InputWrapper = styled.div`
     width: 100%;
     display: flex;
@@ -48,7 +47,6 @@ const ButtonWrapper = styled.div`
     display: flex;
     justify-content: center;
 `;
-
 const Logo = styled.img`
     height: 75px;
     width: 75px;
@@ -76,8 +74,9 @@ const country = 972;
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 logEvent(analytics, 'main_page_loaded');
+// End Initializing Firebase
 
-
+// Helpers
 const validatePhoneNumber = (number) => {
   return number && number !== '' &&
       (number.length === 9 && number.charAt(0) !== '0' || // e.g 547111111
@@ -85,15 +84,20 @@ const validatePhoneNumber = (number) => {
         number.length >= 12 && number.charAt(0) === '+'); // e.g +972547111111
 };
 
+
 const App = () => {
   const [cookies, setCookie] = useCookies(['wpsender']);
   const [input, setInput] = useState('');
   const langFromCookie = cookies.Language;
   const [language, setLanguage] = useState(langFromCookie ?? 'HE');
 
-  const handleChangeLanguage = (language) => {
-    setLanguage(language);
+  useEffect(() => {
     setCookie('Language', language, {path: '/'});
+  }, [language]);
+
+  const handleChangeLanguage = (value) => {
+    if (value === language || !value) return; // Do Nothing
+    setLanguage(value);
   };
 
   const handleEnterKey = (event) => {
@@ -118,7 +122,6 @@ const App = () => {
     const number = cleanNumString.charAt(0) === '+' ? cleanNumString :
       `+${country}${+cleanNumString}`;
     const url = `${apiUrl}${number}`;
-    console.log(url);
     logEvent(analytics, 'submit_button');
     window.open(url);
   };

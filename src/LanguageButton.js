@@ -4,16 +4,13 @@ import styled from 'styled-components';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 
-
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-
 const LanguageButton = ({language, changeLanguage}) => {
   const handleChange = (_event, newVal) => {
-    if (newVal === language || !newVal) return; // Do Nothing
     changeLanguage(newVal);
   };
 
