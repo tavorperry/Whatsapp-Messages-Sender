@@ -96,7 +96,7 @@ const App = () => {
     setCookie('Language', language, {path: '/'});
   };
 
-  const handleKeyDown = (event) => {
+  const handleEnterKey = (event) => {
     if (event.key === 'Enter') {
       handleSubmit();
     }
@@ -146,7 +146,7 @@ const App = () => {
           autoFocus
           maxLength='15'
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleEnterKey}
         />
       </InputWrapper>
       <ButtonWrapper>
