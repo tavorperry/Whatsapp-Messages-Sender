@@ -86,10 +86,22 @@ const validatePhoneNumber = (number) => {
 
 
 const App = () => {
+  const userLocalLang = navigator.language || navigator.userLanguage;
+  const isLocalLangHebrew = userLocalLang && userLocalLang === 'he-IL';
   const [cookies, setCookie] = useCookies(['wpsender']);
   const [input, setInput] = useState('');
   const langFromCookie = cookies.Language;
-  const [language, setLanguage] = useState(langFromCookie ?? 'HE');
+
+  const initialLanguage = () => {
+    if (langFromCookie && langFromCookie.length !== 0) {
+      return langFromCookie;
+    } else {
+      return isLocalLangHebrew ? 'HE' : 'EN';
+    }
+  };
+  console.log('initialLanguage', initialLanguage());
+
+  const [language, setLanguage] = useState(initialLanguage());
 
   useEffect(() => {
     setCookie('Language', language, {path: '/'});
