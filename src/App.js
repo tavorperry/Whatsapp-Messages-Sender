@@ -10,6 +10,7 @@ import {firebaseConfig} from './properties';
 import LanguageButton from './LanguageButton';
 
 import './index.css';
+import Content from './Content';
 
 const texts = {
   HE: {
@@ -99,7 +100,6 @@ const App = () => {
       return isLocalLangHebrew ? 'HE' : 'EN';
     }
   };
-  console.log('initialLanguage', initialLanguage());
 
   const [language, setLanguage] = useState(initialLanguage());
 
@@ -169,6 +169,7 @@ const App = () => {
           <b>{texts[language].button}</b>
         </Button>
       </ButtonWrapper>
+      <Content lang={language}/>
     </Wrapper>
   );
 };
